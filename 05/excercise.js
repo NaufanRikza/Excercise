@@ -143,7 +143,7 @@ console.log("Output => ", concateWords(["hello", "World", "my", "friends"])); //
 console.log();
 
 console.log("Split Words");
-console.log("Output => ", splitWord("my name is ivan")); //[ 'my', 'name', 'is', 'ivan' ]
+console.log("Output => ", splitWord("my name")); //[ 'my', 'name', 'is', 'ivan' ]
 
 console.log();
 

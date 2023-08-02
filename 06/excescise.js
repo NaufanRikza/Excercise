@@ -8,20 +8,39 @@ class Product {
 class Transaction {
   constructor() {
     this.total = 0;
-    this.products = {
-      productsData: [],
-      quantity: 0,
-    };
+    this.products = [];
   }
 
   addChart(product) {
-    this.products.productsData.push(product);
-    this.total += 1;
-    this.products.quantity += product.price;
+    if (this.products.length === 0) {
+      this.products.push({
+        name: product.name,
+        price: product.price,
+        qty: 1,
+      });
+    } else {
+      let isSame = false;
+      for (let prod of this.products) {
+        if (product.name === prod.name) {
+          prod.qty = prod.qty + 1;
+          isSame = true;
+          break;
+        }
+      }
+      if (!isSame) {
+        this.products.push({
+          name: product.name,
+          price: product.price,
+          qty: 1,
+        });
+      }
+    }
   }
 
   showTotal() {
-    console.log("current transaction => ", this.total);
+    for (let prod of this.products) {
+      this.total += prod.price * prod.qty;
+    }
   }
 
   checkOut() {
@@ -43,53 +62,43 @@ const createTransaction = () => {
   transaction.addChart(prod1);
   transaction.addChart(prod2);
   transaction.addChart(prod3);
+  transaction.addChart(prod3);
+  transaction.addChart(prod3);
 
   transaction.showTotal();
   transaction.checkOut();
 };
 
-const calculateObject = (object1 = {}, object2 = {}) => {
+const calculateObject = (students = []) => {
   //find highest score
-  let highestScore = 0;
-  let lowestScore = 0;
+  let highestScore = students[0].score;
+  let lowestScore = students[0].score;
+  let scoreAverage = 0;
+  let ageAverage = 0;
+  const toSecond = 0.001;
+  const toYear = 3600 * 24 * 365;
+  const date = new Date();
+  let oldestAge = Math.round(((date - students[0].age) * toSecond) / toYear);
+  let youngestAge = Math.round(((date - students[0].age) * toSecond) / toYear);
 
-  if (object1.score > object2.score) {
-    highestScore = object1.score;
-    lowestScore = object2.score;
-  } else {
-    highestScore = object2.score;
-    lowestScore = object1.score;
+  for (let student of students) {
+    highestScore = Math.max(highestScore, student.score);
+    lowestScore = Math.min(lowestScore, student.score);
+    youngestAge = Math.min(
+      youngestAge,
+      Math.round(((date - student.age) * toSecond) / toYear)
+    );
+    oldestAge = Math.max(
+      oldestAge,
+      Math.round(((date - student.age) * toSecond) / toYear)
+    );
+    scoreAverage += student.score;
+    ageAverage += ((date - student.age) * toSecond) / toYear;
   }
 
   //calculate average
-  const scoreAverage = (object1.score + object2.score) / 2;
-
-  //find olderAge
-  const date = new Date();
-  const ageInYear1 = Math.round(
-    (date - object1.age) / 1000 / (3600 * 24 * 365)
-  );
-  const ageInYear2 = Math.round(
-    (date - object2.age) / 1000 / (3600 * 24 * 365)
-  );
-
-  //   console.log(ageInYear1);
-  //   console.log(ageInYear2);
-
-  let olderAge = 0;
-  let youngerAge = 0;
-
-  if (ageInYear1 - ageInYear2 < 0) {
-    youngerAge = ageInYear1;
-    olderAge = ageInYear2;
-  } else {
-    youngerAge = ageInYear2;
-    olderAge = ageInYear1;
-  }
-
-  //find averag of Age
-
-  const ageAverage = (ageInYear1 + ageInYear2) / 2;
+  scoreAverage /= students.length;
+  ageAverage /= students.length;
 
   return {
     score: {
@@ -98,8 +107,8 @@ const calculateObject = (object1 = {}, object2 = {}) => {
       average: scoreAverage,
     },
     age: {
-      highest: olderAge,
-      lowest: youngerAge,
+      highest: oldestAge,
+      lowest: youngestAge,
       average: ageAverage,
     },
   };
@@ -107,7 +116,7 @@ const calculateObject = (object1 = {}, object2 = {}) => {
 
 console.log("Calculate Object");
 
-const res = calculateObject(
+const res = calculateObject([
   {
     name: "Ivan",
     email: "bababa@gmail.com",
@@ -119,8 +128,8 @@ const res = calculateObject(
     email: "babababa@gmail.com",
     age: new Date("1998-09-06"),
     score: 70,
-  }
-);
+  },
+]);
 
 console.log(res);
 
