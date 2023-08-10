@@ -2,31 +2,25 @@ class Queue {
   #tasks = [];
 
   addTask(task) {
-    const time = Math.floor(Math.random() * 10000);
-    const taskObj = {
-      name: task,
-      task: () => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(`${task} done in ${time / 1000} second`);
-          }, time);
-        });
-      },
-      time: time,
-    };
-
-    this.#tasks.push(taskObj);
+    this.#tasks.push(task);
     console.log("LOG : ", "Tasks => ", this.#tasks);
   }
 
-  start() {
+  process() {
+    const time = Math.floor(Math.random() * 10000);
+    return new Promise((resolve) => {
+      let task = this.#tasks.shift();
+      setTimeout(() => {
+        resolve(`${task} done in ${time / 1000} second`);
+      }, time);
+    });
+  }
+
+  async start() {
     console.log("Running all processes ...");
-    for (let taskProcess of this.#tasks) {
-      taskProcess.task().then((res) => {
-        if (res) {
-          console.log(res);
-        }
-      });
+    while (this.#tasks.length > 0) {
+      let res = await this.process();
+      console.log(res);
     }
   }
 }
