@@ -6,6 +6,9 @@ const findSingleNumber = (arr = []) => {
   const max = Math.max(...arr);
   let singleNumber = [];
   for (let num = 0; num <= max; num++) {
+    if (arr.findIndex((number) => number === num) === -1) {
+      continue;
+    }
     let find = arr.filter((number) => number === num);
     if (find.length === 1) {
       singleNumber.push(find[0]);
