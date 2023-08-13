@@ -71,7 +71,7 @@ class ShootingGame {
 
   start() {
     console.log("Game Start!!");
-    while (this.#player1.getHealth() > 0 && this.#player2.getHealth() > 0) {
+    while (true) {
       this.#player1.showStatus();
       this.#player2.showStatus();
 
@@ -79,9 +79,19 @@ class ShootingGame {
       this.#player2.useItem(this.getRandomIntem());
 
       this.#player1.hit(this.#player2.getPower());
+      if (this.#player1.getHealth() <= 0) {
+        break;
+      }
       this.#player2.hit(this.#player1.getPower());
+      if (this.#player2.getHealth() <= 0) {
+        break;
+      }
       console.log();
     }
+    console.log();
+    this.#player1.showStatus();
+    this.#player2.showStatus();
+    console.log();
 
     const winner =
       this.#player1.getHealth() > 0 && this.#player2.getHealth() <= 0
