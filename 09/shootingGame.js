@@ -54,8 +54,8 @@ class Player {
 class ShootingGame {
   #player1;
   #player2;
-  #healthItem = [0, 10];
-  #powerItem = [0, 10];
+  #item = ["health", "power"];
+  // #powerItem = [0, 10];
 
   constructor(player1, player2) {
     this.#player1 = player1;
@@ -63,13 +63,21 @@ class ShootingGame {
   }
 
   getRandomIntem() {
+    let health = 0;
+    let power = 0;
+    if (this.#item[Math.round(Math.random())] === "health") {
+      health = 10;
+    } else {
+      power = 10;
+    }
     return {
-      health: this.#healthItem[Math.round(Math.random())],
-      power: this.#powerItem[Math.round(Math.random())],
+      health: health,
+      power: power,
     };
   }
 
   start() {
+    let winner = "";
     console.log("Game Start!!");
     while (true) {
       this.#player1.showStatus();
@@ -80,10 +88,12 @@ class ShootingGame {
 
       this.#player1.hit(this.#player2.getPower());
       if (this.#player1.getHealth() <= 0) {
+        winner = this.#player2.getName();
         break;
       }
       this.#player2.hit(this.#player1.getPower());
       if (this.#player2.getHealth() <= 0) {
+        winner = this.#player1.getName();
         break;
       }
       console.log();
@@ -92,11 +102,6 @@ class ShootingGame {
     this.#player1.showStatus();
     this.#player2.showStatus();
     console.log();
-
-    const winner =
-      this.#player1.getHealth() > 0 && this.#player2.getHealth() <= 0
-        ? this.#player1.getName()
-        : this.#player2.getName();
 
     console.log(winner, "is the winner");
   }
